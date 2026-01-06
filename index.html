@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONOCHROME MODS | Чёрно-белые моды для Minecraft 1.16.5</title>
+    <style>
+        /* СТРОГО ЧЁРНО-БЕЛАЯ ПАЛИТРА */
+        :root {
+            --black-1: #000000;
+            --black-2: #0a0a0a;
+            --black-3: #111111;
+            --black-4: #1a1a1a;
+            --gray-1: #222222;
+            --gray-2: #333333;
+            --gray-3: #444444;
+            --gray-4: #555555;
+            --gray-5: #666666;
+            --gray-6: #777777;
+            --gray-7: #888888;
+            --gray-8: #999999;
+            --white-1: #cccccc;
+            --white-2: #dddddd;
+            --white-3: #eeeeee;
+            --white-4: #ffffff;
+            
+            --accent-line: #ffffff;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', 'Consolas', monospace;
+        }
+        
+        body {
+            background-color: var(--black-1);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(45deg, var(--black-2) 25%, transparent 25%),
+                linear-gradient(-45deg, var(--black-2) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, var(--black-2) 75%),
+                linear-gradient(-45deg, transparent 75%, var(--black-2) 75%);
+            background-size: 40px 40px;
+            background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.85);
+        }
+        
+        /* ШАПКА */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 2px solid var(--white-4);
+            margin-bottom: 40px;
+            position: relative;
+            background: var(--black-3);
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--white-4), 
+                var(--white-4), 
+                transparent);
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--white-4);
+            font-weight: 900;
+            text-shadow: 
+                0 1px 0 var(--gray-7),
+                0 2px 0 var(--gray-6),
+                0 3px 0 var(--gray-5),
+                0 4px 0 var(--gray-4);
+        }
+        
+        .tagline {
+            color: var(--white-2);
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 20px;
+        }
+        
+        /* ЦВЕТОВАЯ ПАЛИТРА */
+        .color-palette {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .color-box {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--white-4);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .color-box:hover {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+        
+        .color-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--white-2);
+            white-space: nowrap;
+        }
+        
+        /* СЕТКА МОДОВ */
+        .mod-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        /* КАРТОЧКА МОДА */
+        .mod-card {
+            background: var(--black-3);
+            border: 2px solid var(--white-4);
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 5px 5px 0 var(--gray-1);
+        }
+        
+        .mod-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 var(--white-4);
+            border-color: var(--white-4);
+        }
+        
+        .mod-id {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--black-1);
+            color: var(--white-2);
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            border: 1px solid var(--white-4);
+        }
+        
+        .mod-card h3 {
+            color: var(--white-4);
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--white-4);
+            padding-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .mod-version {
+            color: var(--white-2);
+            background: var(--gray-1);
+            padding: 2px 8px;
+            font-size: 0.9rem;
+            border: 1px solid var(--white-4);
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        .mod-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        .mod-features {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .mod-features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: var(--white-2);
+            border-bottom: 1px dotted var(--gray-3);
+        }
+        
+        .mod-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .mod-features li::before {
+            content: '■';
+            position: absolute;
+            left: 0;
+            color: var(--white-4);
+            font-size: 1.2rem;
+        }
+        
+        /* КНОПКА СКАЧИВАНИЯ */
+        .download-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(to right, var(--black-1), var(--gray-2));
+            color: var(--white-4);
+            text-decoration: none;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--white-4);
+            cursor: pointer;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-btn::before {
+            content: '⬇ СКАЧАТЬ';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, var(--white-4), var(--white-2));
+            color: var(--black-1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            border-color: var(--white-4);
+        }
+        
+        .download-btn:hover::before {
+            transform: translateY(0);
+        }
+        
+        .download-btn:hover span {
+            opacity: 0;
+        }
+        
+        /* ИНФОРМАЦИОННЫЕ БЛОКИ */
+        .info-section {
+            background: var(--black-2);
+            border: 2px solid var(--white-4);
+            padding: 30px;
+            margin: 40px 0;
+        }
+        
+        .info-section h3 {
+            color: var(--white-4);
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.5rem;
+            border-bottom: 1px solid var(--white-4);
+            padding-bottom: 10px;
+        }
+        
+        .instructions {
+            color: var(--white-2);
+            line-height: 1.8;
+        }
+        
+        .instructions li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .instructions li::before {
+            content: '►';
+            position: absolute;
+            left: 0;
+            color: var(--white-4);
+        }
+        
+        /* ПОДВАЛ */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 2px solid var(--white-4);
+            color: var(--white-2);
+            background: var(--black-3);
+            position: relative;
+        }
+        
+        footer::before {
+            content: 'MONOCHROME';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--black-1);
+            color: var(--white-4);
+            padding: 0 20px;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+        }
+        
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 768px) {
+            .mod-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+                letter-spacing: 3px;
+            }
+            
+            .color-box {
+                width: 30px;
+                height: 30px;
+            }
+        }
+        
+        /* АНИМАЦИЯ ЗАГРУЗКИ */
+        .loading-bar {
+            width: 100%;
+            height: 3px;
+            background: var(--gray-2);
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--white-4);
+            animation: loading 2s infinite linear;
+        }
+        
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* ASCII АРТ */
+        .ascii-art {
+            font-family: monospace;
+            white-space: pre;
+            color: var(--white-4);
+            font-size: 0.8rem;
+            text-align: center;
+            margin: 20px 0;
+            opacity: 0.7;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ШАПКА -->
+        <header>
+            <h1>MONOCHROME MODS</h1>
+            <div class="ascii-art">
+  _____ _____ _____ _____ _____ 
+ |     |     |   | |   __| __  |
+ |   --|  |  | | | |   __|    -|
+ |_____|_____|_|___|_____|__|__|
+            </div>
+            <p class="tagline">ЧЁРНЫЙ • БЕЛЫЙ • МИНИМАЛИЗМ • ФУНКЦИОНАЛЬНОСТЬ</p>
+            
+            <!-- ЦВЕТОВАЯ ПАЛИТРА -->
+            <div class="color-palette">
+                <div class="color-box" style="background-color: #000000;">
+                    <span class="color-label">#000000</span>
+                </div>
+                <div class="color-box" style="background-color: #0a0a0a;">
+                    <span class="color-label">#0a0a0a</span>
+                </div>
+                <div class="color-box" style="background-color: #111111;">
+                    <span class="color-label">#111111</span>
+                </div>
+                <div class="color-box" style="background-color: #1a1a1a;">
+                    <span class="color-label">#1a1a1a</span>
+                </div>
+                <div class="color-box" style="background-color: #222222;">
+                    <span class="color-label">#222222</span>
+                </div>
+                <div class="color-box" style="background-color: #333333;">
+                    <span class="color-label">#333333</span>
+                </div>
+                <div class="color-box" style="background-color: #ffffff;">
+                    <span class="color-label">#ffffff</span>
+                </div>
+                <div class="color-box" style="background-color: #cccccc;">
+                    <span class="color-label">#cccccc</span>
+                </div>
+                <div class="color-box" style="background-color: #eeeeee;">
+                    <span class="color-label">#eeeeee</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- СЕТКА МОДОВ -->
+        <div class="mod-grid">
+            <!-- МОД 1: InventoryHud -->
+            <div class="mod-card">
+                <div class="mod-id">MOD-001</div>
+                <h3>InventoryHud <span class="mod-version">1.16.2-1.16.5</span></h3>
+                <p class="mod-description">Монохромный HUD для отображения инвентаря на экране. Чистый интерфейс без лишних деталей, показывает содержимое инвентаря, экипировку и статус эффектов.</p>
+                <ul class="mod-features">
+                    <li>Минималистичный чёрно-белый дизайн</li>
+                    <li>Отображение инвентаря в реальном времени</li>
+                    <li>Показ экипировки и брони</li>
+                    <li>Индикация эффектов зелий</li>
+                    <li>Настраиваемое положение элементов</li>
+                </ul>
+                <div class="loading-bar"></div>
+                <a href="https://drive.google.com/file/d/1TYs3ivKYDfRMKMp7V_1_ZqknnqA3YnM_/view?usp=drive_link" class="download-btn" target="_blank">
+                    <span>СКАЧАТЬ INVENTORYHUD</span>
+                </a>
+            </div>
+
+            <!-- МОД 2: TopkaSync -->
+            <div class="mod-card">
+                <div class="mod-id">MOD-002</div>
+                <h3>TopkaSync <span class="mod-version">Forge 1.16.5</span></h3>
+                <p class="mod-description">Синхронизация настроек и конфигураций между клиентами. Сохраняет все настройки модов, управление ключами и персональные конфигурации.</p>
+                <ul class="mod-features">
+                    <li>Синхронизация конфигураций</li>
+                    <li>Облачное сохранение настроек</li>
+                    <li>Экспорт/импорт профилей</li>
+                    <li>Автоматические бэкапы</li>
+                    <li>Минимальный расход ресурсов</li>
+                </ul>
+                <div class="loading-bar"></div>
+                <a href="https://drive.google.com/file/d/1y5ryZe33lpvAgl3dPcA1MczS1PANSO5N/view?usp=drive_link" class="download-btn" target="_blank">
+                    <span>СКАЧАТЬ TOPKASYNC</span>
+                </a>
+            </div>
+
+            <!-- МОД 3: TopkaUI -->
+            <div class="mod-card">
+                <div class="mod-id">MOD-003</div>
+                <h3>TopkaUI <span class="mod-version">Forge 1.16.5</span></h3>
+                <p class="mod-description">Полная переработка пользовательского интерфейса Minecraft. Строгий монохромный дизайн, оптимизированная навигация и улучшенная читаемость.</p>
+                <ul class="mod-features">
+                    <li>Полностью чёрно-белый интерфейс</li>
+                    <li>Улучшенные шрифты и иконки</li>
+                    <li>Быстрая навигация по меню</li>
+                    <li>Кастомные HUD элементы</li>
+                    <li>Оптимизация производительности</li>
+                </ul>
+                <div class="loading-bar"></div>
+                <a href="https://drive.google.com/file/d/11uVdSgEi4Vq73Atu_u0-sWgsTp_uVb_k/view?usp=drive_link" class="download-btn" target="_blank">
+                    <span>СКАЧАТЬ TOPKAUI</span>
+                </a>
+            </div>
+
+            <!-- МОД 4: TopkaPvpEdit -->
+            <div class="mod-card">
+                <div class="mod-id">MOD-004</div>
+                <h3>TopkaPvpEdit <span class="mod-version">Forge 1.16.5</span></h3>
+                <p class="mod-description">Набор инструментов для PvP. Включает улучшенную систему прицеливания, индикаторы урона, таймеры и другие инструменты для эффективного PvP.</p>
+                <ul class="mod-features">
+                    <li>Улучшенный прицел и индикаторы</li>
+                    <li>Отображение урона в реальном времени</li>
+                    <li>Таймеры способностей</li>
+                    <li>Настройки под разные PvP режимы</li>
+                    <li>Минималистичный интерфейс</li>
+                </ul>
+                <div class="loading-bar"></div>
+                <a href="https://drive.google.com/file/d/1hbOAB1evLZ9hXYrbnEsGnFBBPlVOaI-s/view?usp=drive_link" class="download-btn" target="_blank">
+                    <span>СКАЧАТЬ TOPKAPVPEDIT</span>
+                </a>
+            </div>
+
+            <!-- МОД 5: TopkaHealth -->
+            <div class="mod-card">
+                <div class="mod-id">MOD-005</div>
+                <h3>TopkaHealth <span class="mod-version">1.16.5 Forge</span></h3>
+                <p class="mod-description">Продвинутая система отображения здоровья. Показывает точные значения HP, индикаторы поглощения урона, регенерацию и статусные эффекты.</p>
+                <ul class="mod-features">
+                    <li>Точное отображение значений здоровья</li>
+                    <li>Индикаторы поглощения урона</li>
+                    <li>Отслеживание регенерации</li>
+                    <li>Статусные эффекты в реальном времени</li>
+                    <li>Настраиваемые HUD элементы</li>
+                </ul>
+                <div class="loading-bar"></div>
+                <a href="https://drive.google.com/file/d/15Y14y1jWIwYMIecq1A8pBkyBzc4VrkB8/view?usp=drive_link" class="download-btn" target="_blank">
+                    <span>СКАЧАТЬ TOPKAHEALTH</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- ИНФОРМАЦИОННЫЙ БЛОК -->
+        <div class="info-section">
+            <h3>⚙ ИНСТРУКЦИЯ ПО УСТАНОВКЕ</h3>
+            <div class="instructions">
+                <ol>
+                    <li>Скачайте нужный мод, нажав на кнопку "СКАЧАТЬ"</li>
+                    <li>Убедитесь, что у вас установлен Minecraft Forge для версии 1.16.5</li>
+                    <li>Перейдите в папку .minecraft/mods</li>
+                    <li>Поместите скачанный файл .jar в папку mods</li>
+                    <li>Запустите Minecraft с профилем Forge</li>
+                    <li>Настройте моды через меню Mods в игре</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ТЕХНИЧЕСКАЯ ИНФОРМАЦИЯ -->
+        <div class="info-section">
+            <h3>📋 ТЕХНИЧЕСКИЕ ТРЕБОВАНИЯ</h3>
+            <div class="instructions">
+                <ul>
+                    <li><strong>Версия Minecraft:</strong> 1.16.5 (совместимость с 1.16.2-1.16.5)</li>
+                    <li><strong>Загрузчик модов:</strong> Minecraft Forge</li>
+                    <li><strong>Оперативная память:</strong> Минимум 4GB RAM</li>
+                    <li><strong>Система:</strong> Windows/Linux/MacOS</li>
+                    <li><strong>Совместимость:</strong> Все моды совместимы между собой</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ПОДВАЛ -->
+        <footer>
+            <div class="ascii-art">
+ _______________________________
+|  MONOCHROME MODS COLLECTION  |
+|_______________________________|
+| • InventoryHud 1.16.2-1.16.5  |
+| • TopkaSync Forge 1.16.5      |
+| • TopkaUI Forge 1.16.5        |
+| • TopkaPvpEdit Forge 1.16.5   |
+| • TopkaHealth 1.16.5 Forge    |
+|_______________________________|
+            </div>
+            <p style="margin-top: 20px; color: var(--white-3);">© 2024 MONOCHROME MODS | Строгая чёрно-белая эстетика</p>
+            <p style="margin-top: 10px; color: var(--gray-7); font-size: 0.9rem;">
+                Все моды предназначены для некоммерческого использования.<br>
+                Для корректной работы требуется Minecraft Forge 1.16.5.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Анимация для кнопок скачивания
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Анимация нажатия
+                this.style.transform = 'scale(0.98)';
+                
+                // Восстановление через 150ms
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+                
+                // Статистика скачивания (демо)
+                console.log(`Скачивание мода: ${this.querySelector('span').textContent}`);
+            });
+        });
+        
+        // Эффект появления карточек
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.mod-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+        
+        // ASCII арт анимация
+        const asciiArt = document.querySelector('.ascii-art');
+        if (asciiArt) {
+            const originalText = asciiArt.textContent;
+            let frame = 0;
+            
+            setInterval(() => {
+                frame++;
+                let newText = originalText;
+                if (frame % 4 === 0) {
+                    newText = newText.replace(/█/g, '▓');
+                } else if (frame % 4 === 1) {
+                    newText = newText.replace(/█/g, '▒');
+                } else if (frame % 4 === 2) {
+                    newText = newText.replace(/█/g, '░');
+                }
+                asciiArt.textContent = newText;
+            }, 500);
+        }
+    </script>
+</body>
+</html>
